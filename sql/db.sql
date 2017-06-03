@@ -4,7 +4,8 @@ USE login;
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user(
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     uname VARCHAR(100) NOT NULL,
-    pwd VARCHAR(500) NOT NULL
+    pwd VARCHAR(500) NOT NULL,
+    PRIMARY KEY(id)
 );

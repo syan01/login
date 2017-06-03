@@ -1,17 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
-
-
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-	host     : 'localhost',
-	user     : 'root',
-	password : 'ysqmy12365',
-	database : 'login'
-});
-
-connection.connect();
+var sql = require('./sql');
 
 
 /* GET users listing. */
@@ -20,25 +9,28 @@ router.get('/', function(req, res, next) {
   res.render('login');
 });
 
-router.post('/', function(req, res, next){
+router.post('/login', function(req, res, next){	
 	const uname = req.body.uname;
 	const psw = req.body.psw;
 	console.log('post login');
-	console.log(uname);
-	console.log(psw);
-	var sql = "SELECT pwd FROM user WHERE uname = '" + uname + "';"
-	console.log(sql);
-	connection.query(sql, function (error, results, fields) {
-		if (error) throw error;
-		if(results.length == 0)  	{
-			res.status(401).send("Cannot found this username")
-		}else if(psw == results[0].pwd){
-			res.redirect('/');
-		}else{
-			res.status(401).send("wrong password");
-		}	
+	sql.password(uname, function(error, rst){
+		if (!error) {
+			if(rst == null){
+				res.send('Cannot find this user');
+				
+			}else if(rst== psw){
+				res.send('Alerady logged in');
+			}else{
+				res.send('Wrong password');
+			}
+		}
 	});
-
 });
+
+router.post('/signup', function(req, res, next){
+	sql.add(11111, uname, psw);
+	res.send('Alerady added');
+});
+
 
 module.exports = router;
